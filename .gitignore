@@ -1,0 +1,8 @@
+*.h
+*.swp
+*.tab.c
+*.tab.h
+*.lex.o
+*.y.o
+*.y.c
+*.lex

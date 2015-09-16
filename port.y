@@ -1,7 +1,8 @@
 %{
-#include <iostream>
-#include <cmath>
-#include <stdlib>
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include "global.h"
 %}
 
 
@@ -11,7 +12,6 @@
 %token VARIAVEL
 %token FIM
 %token RETORNE
-
 %left MAIS MENOS VEZES DIVIDE
 %left NEGATIVO
 %right ELEVADO
@@ -23,24 +23,23 @@ Input:
      ;
 
 Linha: FIM
-    | COLOQUE VARIAVEL FIM {std::cout << $2 << endl;}
-    | IMPRIMA VARIAVEL FIM {std::cout << $2;}
+    | VARIAVEL FIM {printf("Resultado: %f \n",$2);}
     | Expressao FIM
-    | error FIM {yyerror;}
+    | error FIM {yyerrok;}
     ;
 
 Expressao: VARIAVEL
-          | Expressao MAIS Expressao {$$ = $1 + $3}
-          | Expressao MENOS Expressao {$$ = $1 - $3}
-          | Expressao VEZES Expressao {$$ = $1 * $3}
-          | Expressao DIVIDE Expressao {$$ = $1 / $3}
-          | Expressao ELEVADO Expressao {$$ =pow($1,$3)}
-          | PARENTESES_ESQUERDO Expressao PARENTESES_DIREITO {$$ = $2}
+          | Expressao MAIS Expressao {$$ = $1 + $3;}
+          | Expressao MENOS Expressao {$$ = $1 - $3;}
+          | Expressao VEZES Expressao {$$ = $1 * $3;}
+          | Expressao DIVIDE Expressao {$$ = $1 / $3;}
+          | Expressao ELEVADO Expressao {$$ =pow($1,$3);}
+          | PARENTESES_ESQUERDO Expressao PARENTESES_DIREITO {$$ = $2;}
           ;
 
 %%
 int yyerror(char *s){
-    cout << s << endl;
+    printf("Erro: %s\n",s);
 }
 
 int main(void){
