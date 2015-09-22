@@ -5,31 +5,30 @@
 %}
 
 BRANCO [ \t]+
+DIGITO [0-9]
+INTEIRO {DIGITO}+
 /*FUNCAO*/
-/*FIM*/
 /*SE*/
 /*FIMSE*/
-MAIS \^MAIS
-MENOS \^MENOS
-DIVIDA \^DIVIDA
-VEZES \^VEZES
-ELEVADO \^ELEVADO
-VARIAVEL \^[a-Z]+[1-9]+
-
+/*MAIS \MAIS*/
+/*MENOS \MENOS*/
+/*DIVIDA \DIVIDA*/
+/*VEZES \VEZES*/
+/*ELEVADO \ELEVADO*/
+/*VARIAVEL \w*/
 %%
  
 {BRANCO} { /* We ignore white characters */ }
-{MAIS} return(MAIS);
-{MENOS} return(MENOS);
-{VEZES} return(VEZES);
-{DIVIDA} return(DIVIDE);
-{ELEVADO} return(ELEVADO);
+"+"  return(MAIS);
+"-" return(MENOS);
+"*" return(VEZES);
+"/" return(DIVIDA);
 "(" return(PARENTESES_ESQUERDO);
 ")" return(PARENTESES_DIREITO);
-
+"\n" return(FIM);
 %%
 
-
-yywrap () {
-return 0;
+int yywrap(void){
+    return 0;    
 }
+
