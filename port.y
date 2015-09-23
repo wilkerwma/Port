@@ -7,7 +7,10 @@
 
 %token NUMBER
 %token MAIS MENOS VEZES DIVIDA
+%token RECEBE
+%token VARIAVEL
 %token FIM
+
 
 %left MAIS MENOS
 %left VEZES DIVIDA
@@ -28,6 +31,8 @@ Linha:
 
 Expressao:
   NUMBER  {$$=$1;}
+  | VARIAVEL {$$=$1;}
+  | Expressao RECEBE Expressao {$$ = $3;}
   | Expressao MAIS Expressao {$$ = $1 + $3;}
   | Expressao MENOS Expressao {$$ = $1 - $3;}
   | Expressao VEZES Expressao {$$ = $1 * $3;}

@@ -9,6 +9,8 @@ digito [0-9]
 numero {digito}+
 exponencial [eE][+-]?{numero}
 real {numero}("."{numero})?{exponencial}?
+VARIAVEL [a-z]+
+
 %%
 {branco} {/* Não faz nada*/}
 {real} {
@@ -16,13 +18,14 @@ real {numero}("."{numero})?{exponencial}?
 		return(NUMBER);
 	   }
 
+"RECEBE" return(RECEBE);
 "MAIS" return(MAIS);
 "MENOS" return(MENOS);
 "VEZES" return(VEZES);
 "DIVIDA" return(DIVIDA);
 
+{VARIAVEL} return(VARIAVEL);
 "\n" return(FIM);
-
 
 %%
 
