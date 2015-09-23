@@ -1,34 +1,33 @@
 %{
-#include <stdlib.h>
 #include "global.h"
 #include "port.h"
+#include <stdlib.h>
 %}
 
-BRANCO [ \t]+
-DIGITO [0-9]
-INTEIRO {DIGITO}+
-/*FUNCAO*/
-/*SE*/
-/*FIMSE*/
-/*MAIS \MAIS*/
-/*MENOS \MENOS*/
-/*DIVIDA \DIVIDA*/
-/*VEZES \VEZES*/
-/*ELEVADO \ELEVADO*/
-/*VARIAVEL \w*/
+branco [ \t]+
+digito [0-9]
+numero {digito}+
+exponencial [eE][+-]?{numero}
+real {numero}("."{numero})?{exponencial}?
 %%
- 
-{BRANCO} { /* We ignore white characters */ }
-"+"  return(MAIS);
-"-" return(MENOS);
-"*" return(VEZES);
-"/" return(DIVIDA);
-"(" return(PARENTESES_ESQUERDO);
-")" return(PARENTESES_DIREITO);
+{branco} {/* Não faz nada*/}
+{real} {
+		yylval=atof(yytext);
+		return(NUMBER);
+	   }
+
+"MAIS" return(MAIS);
+"MENOS" return(MENOS);
+"VEZES" return(VEZES);
+"DIVIDA" return(DIVIDA);
+
 "\n" return(FIM);
+
+
 %%
 
 int yywrap(void){
     return 0;    
 }
+
 
