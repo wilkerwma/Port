@@ -1,2 +1,5 @@
-#define YYSTYPE double
+	
+#define YYSTYPE float
+  
 extern YYSTYPE yylval;
+
