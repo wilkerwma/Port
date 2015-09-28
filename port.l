@@ -4,12 +4,17 @@
 #include <stdlib.h>
 %}
 
+/* Números*/
+
 branco [ \t]+
 digito [0-9]
-numero {digito}+
+numero -?{digito}+
 exponencial [eE][+-]?{numero}
 real {numero}("."{numero})?{exponencial}?
-VARIAVEL [a-z]+
+
+/*Variáveis*/
+
+VARIAVEL [a-z|A-Z|0-9]*
 
 %%
 {branco} {/* Não faz nada*/}
@@ -23,6 +28,15 @@ VARIAVEL [a-z]+
 "MENOS" return(MENOS);
 "VEZES" return(VEZES);
 "DIVIDA" return(DIVIDA);
+"ELEVADO" return(ELEVADO);
+"RAIZ" return(RAIZ);
+
+"(" return(PARENTESES_ESQ);
+")" return(PARENTESES_DIR);
+"[" return(COLCHETE_ESQ);
+"]" return(COLCHETE_DIR);
+"{" return(CHAVES_ESQ);
+"}" return(CHAVES_DIR);
 
 {VARIAVEL} return(VARIAVEL);
 "\n" return(FIM);
