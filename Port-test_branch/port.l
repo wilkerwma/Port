@@ -6,10 +6,10 @@
 
 branco [ \t]+
 digito [0-9]
-numero {digito}+
+numero -?{digito}+
 exponencial [eE][+-]?{numero}
 real {numero}("."{numero})?{exponencial}?
-VARIAVEL [a-z]+
+VARIAVEL [a-zA-Z]+
 
 %%
 {branco} {/* Não faz nada*/}
