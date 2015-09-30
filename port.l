@@ -1,5 +1,4 @@
 %{
-#include "global.h"
 #include "port.h"
 #include <stdlib.h>
 %}
@@ -14,22 +13,21 @@ real {numero}("."{numero})?{exponencial}?
 
 /*Variáveis*/
 
-VARIAVEL [a-z|A-Z|0-9]*
+VARIAVEL [a-zA-Z]+[a-zA-Z{digit}]*
 
 %%
 {branco} {/* Não faz nada*/}
-{real} {
-		yylval=atof(yytext);
-		return(NUMBER);
+{real} {yylval.real = atof(yytext);return NUMBER;
 	   }
 
-"RECEBE" return(RECEBE);
-"MAIS" return(MAIS);
-"MENOS" return(MENOS);
-"VEZES" return(VEZES);
-"DIVIDA" return(DIVIDA);
-"ELEVADO" return(ELEVADO);
-"RAIZ" return(RAIZ);
+{VARIAVEL} {yylval.strval = strdup(yytext);return VARIAVEL;}
+
+"=" return(RECEBE);
+"+" return(MAIS);
+"-" return(MENOS);
+"*" return(VEZES);
+"/" return(DIVIDA);
+"^" return(ELEVADO);
 
 "(" return(PARENTESES_ESQ);
 ")" return(PARENTESES_DIR);
@@ -38,13 +36,10 @@ VARIAVEL [a-z|A-Z|0-9]*
 "{" return(CHAVES_ESQ);
 "}" return(CHAVES_DIR);
 
-{VARIAVEL} return(VARIAVEL);
 "\n" return(FIM);
 
 %%
 
 int yywrap(void){
-    return 0;    
+    return 0;
 }
-
-
