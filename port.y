@@ -33,22 +33,23 @@ Input:
 
 Linha: 
   FIM
-  | Expressao FIM {printf("Resultado: %f\n", $1);}
+  | Expressao FIM {printf("\nResultado: %f\n", $1);}
   | error FIM {yyerrok;}
   ;
 
 Expressao:
   NUMBER  {$$=$1;}
   | VARIAVEL {$$=$1;}
-  | Expressao RECEBE Expressao {$$ = $3;}
-  | Expressao MAIS Expressao {$$ = $1 + $3;}
-  | Expressao MENOS Expressao {$$ = $1 - $3;}
-  | Expressao VEZES Expressao {$$ = $1 * $3;}
-  | Expressao ELEVADO Expressao {$$ = pow($1,$3);}
-  | MENOS Expressao %prec NEG {$$ = -$2;}
-  | PARENTESES_ESQ Expressao PARENTESES_DIR {$$ = $2;}
-  | COLCHETE_ESQ Expressao COLCHETE_DIR {$$ = $2;}
-  | CHAVES_ESQ Expressao CHAVES_DIR {$$ = $2;}
+  | Expressao RECEBE Expressao {$$ = $3; printf("%f = %f", $1,$3);}
+  | Expressao MAIS Expressao {$$ = $1 + $3;printf("%f + %f", $1,$3);}
+  | Expressao MENOS Expressao {$$ = $1 - $3;printf("%f - %f", $1,$3);}
+  | Expressao VEZES Expressao {$$ = $1 * $3;printf("%f * %f", $1,$3);}
+  | Expressao DIVIDA Expressao {$$ = $1 / $3;printf("%f / %f", $1,$3);}
+  | Expressao ELEVADO Expressao {$$ = pow($1,$3);printf("%f ** %f", $1,$3);}
+  | MENOS Expressao %prec NEG {$$ = -$2;printf("-%f", $2);}
+  | PARENTESES_ESQ Expressao PARENTESES_DIR {$$ = $2;printf("(%f)", $2);}
+  | COLCHETE_ESQ Expressao COLCHETE_DIR {$$ = $2;$$ = $2;printf("[%f]", $2);}
+  | CHAVES_ESQ Expressao CHAVES_DIR {$$ = $2;$$ = $2;printf("{%f}", $2);}
 
   ;
 
