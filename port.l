@@ -17,6 +17,7 @@ VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 
 %%
 
+<<<<<<<
 "RECEBE" return(RECEBE);
 "MAIS" return(MAIS);
 "MENOS" return(MENOS);
