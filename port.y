@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "port.h"
 
 char buffer[10];
+extern char* yytext;
 
 %}
 
@@ -11,6 +13,7 @@ char buffer[10];
 	float real;
 	char *strval;
 }
+
 %token <real> NUMBER
 %token MAIS MENOS VEZES DIVIDA ELEVADO RAIZ
 
@@ -44,7 +47,7 @@ Linha:
 Expressao:
   NUMBER
   | VARIAVEL
-  | Expressao MAIS Expressao
+  | Expressao MAIS Expressao {InsereNaSaida(&saida, yytext,linha);} 
   | Expressao MENOS Expressao
   | Expressao VEZES Expressao
   | Expressao DIVIDA Expressao
@@ -56,7 +59,8 @@ Expressao:
   ;
 
   Atribuicao:
-    VARIAVEL RECEBE NUMBER {sprintf(buffer,"%f",$3);$1 = buffer;printf("%s\n",$1);}
+    VARIAVEL RECEBE NUMBER {InsereNaSaida(&saida, yytext,linha);} 
+    /*{sprintf(buffer,"%f",$3);$1 = buffer;printf("%s\n",$1);}*/
     ;
 
 
@@ -66,5 +70,14 @@ int yyerror(char *s){
 }
 
 int main(void) {
+
+  saida = NULL;
+  linha = 0;
+
   yyparse();
+
+  file = fopen("final.rb","w");
+  Print(saida);
+  fclose(file);
+
 }

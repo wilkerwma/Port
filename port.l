@@ -13,7 +13,7 @@ real {numero}("."{numero})?{exponencial}?
 
 /*Variáveis*/
 
-VARIAVEL [a-zA-Z]+[a-zA-Z{digit}]*
+VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 
 %%
 {branco} {/* Não faz nada*/}
@@ -22,7 +22,7 @@ VARIAVEL [a-zA-Z]+[a-zA-Z{digit}]*
 
 {VARIAVEL} {yylval.strval = strdup(yytext);return VARIAVEL;}
 
-"=" return(RECEBE);
+"=" return RECEBE;
 "+" return(MAIS);
 "-" return(MENOS);
 "*" return(VEZES);
