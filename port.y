@@ -6,7 +6,9 @@
 
 char buffer[10];
 extern char* yytext;
-
+int linha = 0;
+int saida = NULL;
+FILE *file;
 %}
 
 %union {
@@ -47,7 +49,7 @@ Linha:
 Expressao:
   NUMBER
   | VARIAVEL
-  | Expressao MAIS Expressao {InsereNaSaida(&saida, yytext,linha);} 
+  | Expressao MAIS Expressao {InsereNaSaida(&saida, yytext,linha);}
   | Expressao MENOS Expressao
   | Expressao VEZES Expressao
   | Expressao DIVIDA Expressao
@@ -59,24 +61,21 @@ Expressao:
   ;
 
   Atribuicao:
-    VARIAVEL RECEBE NUMBER {InsereNaSaida(&saida, yytext,linha);} 
+    VARIAVEL RECEBE NUMBER {InsereNaSaida(&saida, yytext,linha);}
     /*{sprintf(buffer,"%f",$3);$1 = buffer;printf("%s\n",$1);}*/
     ;
 
 
 %%
+
 int yyerror(char *s){
   printf("%s\n", s);
 }
 
 int main(void) {
 
-  saida = NULL;
-  linha = 0;
-
+	file = fopen("final.rb","w");
   yyparse();
-
-  file = fopen("final.rb","w");
   Print(saida);
   fclose(file);
 
