@@ -16,18 +16,13 @@ real {numero}("."{numero})?{exponencial}?
 VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 
 %%
-{branco} {/* Não faz nada*/}
-{real} {yylval.real = atof(yytext);return NUMBER;
-	   }
 
-{VARIAVEL} {yylval.strval = strdup(yytext);return VARIAVEL;}
-
-"=" return RECEBE;
-"+" return(MAIS);
-"-" return(MENOS);
-"*" return(VEZES);
-"/" return(DIVIDA);
-"^" return(ELEVADO);
+"RECEBE" return(RECEBE);
+"MAIS" return(MAIS);
+"MENOS" return(MENOS);
+"VEZES" return(VEZES);
+"DIVIDA" return(DIVIDA);
+"ELEVADO" return(ELEVADO);
 
 "(" return(PARENTESES_ESQ);
 ")" return(PARENTESES_DIR);
@@ -35,6 +30,12 @@ VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 "]" return(COLCHETE_DIR);
 "{" return(CHAVES_ESQ);
 "}" return(CHAVES_DIR);
+
+{branco} {/* Não faz nada*/}
+
+{real} {yylval.real = atof(yytext);return NUMBER;}
+
+{VARIAVEL} {yylval.strval = strdup(yytext);return VARIAVEL;}
 
 "\n" return(FIM);
 
