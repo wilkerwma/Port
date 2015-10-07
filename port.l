@@ -1,6 +1,6 @@
 %{
 #include "port.h"
-#include <stdlib.h>
+#include <cstdlib>
 %}
 
 /* Números*/
