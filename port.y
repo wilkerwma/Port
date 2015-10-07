@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "port.h"
+#include "global.h"
 
 char buffer[10];
 extern char* yytext;
@@ -16,7 +16,7 @@ FILE *file;
 	char *strval;
 }
 
-%token <real> NUMBER
+%token <strval> NUMBER
 %token MAIS MENOS VEZES DIVIDA ELEVADO RAIZ
 
 %token  RECEBE
@@ -71,6 +71,16 @@ Expressao:
 int yyerror(char *s){
   printf("%s\n", s);
 }
+
+typedef union YYSTYPE {
+#line 10 "bison.y"
+
+char *strval;
+float real;
+#line 94 "bison.h"
+}YYSTYPE;
+
+extern YYSTYPE yylval;
 
 int main(void) {
 
