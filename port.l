@@ -10,6 +10,7 @@ digito [0-9]
 numero -?{digito}+
 exponencial [eE][+-]?{numero}
 real {numero}("."{numero})?{exponencial}?
+string "\w*"
 
 /*Variáveis*/
 
