@@ -9,14 +9,10 @@
 #include "port.h"
 
 using namespace std;
-char buffer[10];
-map<string,float> variables;
+map<string,float> variablesMap;
 vector<string> saida;
 extern char* yytext;
 ostringstream ss;
-/*int linha = 0;
-int saida = NULL;
-FILE *file;*/
 int yylex(void);
 void yyerror (char const *s) {
    fprintf (stderr, "%s\n", s);
@@ -28,6 +24,23 @@ void printmap(map<string,float> mymap){
   }
 }
 
+bool checkmap(map<string,float> &mymap, string variable){
+	bool checker = NULL;
+	for(auto& iterator : mymap)
+		checker = iterator.first == variable? true : false;
+	return checker;
+	
+}
+
+void insertVariable(map<string, float> &mymap, string variable, float value){
+	if(checkmap(mymap, variable)){
+		cout << "Warning: variable "<< variable <<" already declared,overwriting value" <<endl;
+		mymap[variable] = value;	
+	}else{
+		cout << "Inserting variable into map" << endl;
+		mymap.insert(pair<string,float>(variable,value));			
+	}
+}
 void printsaida(vector<string> myvector){
   for(auto& iterator : myvector){
     cout << iterator.front();
@@ -50,7 +63,7 @@ void printsaida(vector<string> myvector){
 %token <strval> VARIAVEL
 %token FIM
 
-%left VEZES DIVIDAchar
+%left VEZES DIVIDA
 %left MAIS MENOS
 %left NEG
 
@@ -72,18 +85,18 @@ Linha:
   ;
 
 Expressao:
-  NUMBER {sprintf(buffer,"%f",$1);}
-  | VARIAVEL {sprintf(buffer,"%f",$1);}
-  | Expressao MAIS Expressao {sprintf(buffer,"%f",$1+$3);cout<<buffer<< endl;}
-  | Expressao MENOS Expressao
-  | Expressao VEZES Expressao
-  | Expressao DIVIDA Expressao
-  | Expressao ELEVADO Expressao
+  NUMBER {$$ = $1;}
+  | VARIAVEL
+  | Expressao MAIS Expressao {$$ = $1 + $3;}
+  | Expressao MENOS Expressao {$$ = $1 - $3;}
+  | Expressao VEZES Expressao {$$ = $1 * $3;}
+  | Expressao DIVIDA Expressao {$$ = $1 / $3;}
+  | Expressao ELEVADO Expressao {$$ = pow($1,$3);}
   ;
 
   Atribuicao:
-    VARIAVEL RECEBE Expressao {ss << $3; string s(ss.str());variables.insert(pair<string,float>($1,$3));saida.push_back($1);
-      saida.push_back("=");saida.push_back(s);printmap(variables); printsaida(saida);}
+    VARIAVEL RECEBE Expressao {ss << $3; string s(ss.str());insertVariable(variablesMap,$1,$3);saida.push_back($1);
+      saida.push_back("=");saida.push_back(s);printmap(variablesMap); printsaida(saida);}
     ;
 
 
