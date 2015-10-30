@@ -24,6 +24,12 @@ VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 "VEZES" return(VEZES);
 "DIVIDA" return(DIVIDA);
 "ELEVADO" return(ELEVADO);
+"SE" return(SE);
+"SENAO" return(SENAO);
+"MAIOR" return (MAIOR);
+"MENOR" return (MENOR);
+"IGUAL" return (IGUAL);
+"DIFERENTE" return (DIFERENTE);
 
 "(" return(PARENTESES_ESQ);
 ")" return(PARENTESES_DIR);

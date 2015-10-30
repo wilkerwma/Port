@@ -6,9 +6,11 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <fstream>
 #include "port.h"
 
 using namespace std;
+ofstream rubyfile;
 map<string,float> variablesMap;
 vector<string> saida;
 extern char* yytext;
@@ -42,11 +44,19 @@ void insertVariable(map<string, float> &mymap, string variable, float value){
 	}
 }
 void printsaida(vector<string> myvector){
-  for(auto& iterator : myvector){
-    cout << iterator.front();
+  rubyfile.open("port.rb", fstream::out);
+	for(auto& iterator : myvector){
+    rubyfile << iterator;
   }
+	rubyfile.close();
 }
 
+string convertNumber(float number){
+	ss.str("");
+	ss << number;
+	string s(ss.str());
+	return s;
+}
 %}
 
 %union {
@@ -56,10 +66,11 @@ void printsaida(vector<string> myvector){
 
 %token <real> NUMBER
 %token MAIS MENOS VEZES DIVIDA ELEVADO RAIZ
-
+%token SE SENAO MAIOR MENOR IGUAL DIFERENTE
 %token  RECEBE
 %token  PARENTESES_ESQ PARENTESES_DIR COLCHETE_ESQ COLCHETE_DIR CHAVES_ESQ CHAVES_DIR
 %type <real> Expressao
+%type <bool> Comparacao
 %token <strval> VARIAVEL
 %token FIM
 
@@ -85,26 +96,32 @@ Linha:
   ;
 
 Expressao:
-  NUMBER {$$ = $1;}
-  | VARIAVEL
-  | Expressao MAIS Expressao {$$ = $1 + $3;}
-  | Expressao MENOS Expressao {$$ = $1 - $3;}
-  | Expressao VEZES Expressao {$$ = $1 * $3;}
-  | Expressao DIVIDA Expressao {$$ = $1 / $3;}
-  | Expressao ELEVADO Expressao {$$ = pow($1,$3);}
+  NUMBER {$$ = $1;saida.push_back(convertNumber($1));saida.push_back("\n");}
+  | Expressao MAIS Expressao {$$ = $1 + $3; saida.push_back(convertNumber($1)); saida.push_back("+"); saida.push_back(convertNumber($3));saida.push_back("\n");}
+  | Expressao MENOS Expressao {$$ = $1 - $3;saida.push_back(convertNumber($1)); saida.push_back("-"); saida.push_back(convertNumber($3));saida.push_back("\n");}
+  | Expressao VEZES Expressao {$$ = $1 * $3;saida.push_back(convertNumber($1)); saida.push_back("*"); saida.push_back(convertNumber($3));saida.push_back("\n");}
+  | Expressao DIVIDA Expressao {$$ = $1 / $3;saida.push_back(convertNumber($1)); saida.push_back("/"); saida.push_back(convertNumber($3));saida.push_back("\n");}
+  | Expressao ELEVADO Expressao {$$ = pow($1,$3);saida.push_back(convertNumber($1)); saida.push_back("**"); saida.push_back(convertNumber($3));saida.push_back("\n");}
   ;
 
-  Atribuicao:
-    VARIAVEL RECEBE Expressao {ss << $3; string s(ss.str());insertVariable(variablesMap,$1,$3);saida.push_back($1);
-      saida.push_back("=");saida.push_back(s);printmap(variablesMap); printsaida(saida);}
+Atribuicao:
+  VARIAVEL RECEBE Expressao {saida.insert(saida.begin(),"=");saida.insert(saida.begin(),$1);insertVariable(variablesMap,$1,$3);printmap(variablesMap); printsaida(saida);}
     ;
 
+Comparacao:
+	Expressao MAIOR Expressao {$$ = $1 > $3;}
+  | Expressao IGUAL Expressao {$$ = $1 == $3;}
+	| Expressao MENOR Expressao {$$ = $1 < $3;}
+	| Expressao DIFERENTE Expressao	{$$ = $1 != $3;}
+	; 
+
+Condicional:
+	SE Comparacao	Expressao
+	;
 
 %%
 
 int main(void) {
 
   yyparse();
-
-
 }
