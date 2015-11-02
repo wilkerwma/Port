@@ -66,7 +66,7 @@ string convertNumber(float number){
 
 %token <real> NUMBER
 %token MAIS MENOS VEZES DIVIDA ELEVADO RAIZ
-%token SE SENAO MAIOR MENOR IGUAL DIFERENTE
+%token SE SENAO ENTAO MAIORIGUAL MENORIGUAL MAIOR MENOR IGUAL DIFERENTE
 %token  RECEBE
 %token  PARENTESES_ESQ PARENTESES_DIR COLCHETE_ESQ COLCHETE_DIR CHAVES_ESQ CHAVES_DIR
 %type <real> Expressao
@@ -91,6 +91,7 @@ Linha:
   FIM
   | Expressao FIM
   | Atribuicao FIM
+  | Condicao FIM
   | error FIM {yyerrok;}
   ;
 
@@ -104,8 +105,28 @@ Expressao:
   ;
 
 Atribuicao:
-  VARIAVEL {saida.push_back($1);} RECEBE {saida.push_back("=");} Expressao {saida.push_back("\n");insertVariable(variablesMap,$1,$5);printmap(variablesMap); printsaida(saida);}
+  VARIAVEL {saida.push_back($1);} RECEBE {saida.push_back("=");} Expressao {saida.push_back("\n");insertVariable(variablesMap,$1,$5);printmap(variablesMap);}
     ;
+
+Statement:
+	Expressao
+	| Atribuicao
+	| Condicao
+	;
+
+Comparador:
+	IGUAL {saida.push_back("==");}
+	| MAIOR{saida.push_back(">");}
+	| MENOR{saida.push_back("<");}
+	| MAIORIGUAL{saida.push_back(">=");}
+	|	MENORIGUAL{saida.push_back("<=");}
+	| DIFERENTE{saida.push_back("!=");}
+	;
+
+Condicao:
+	SE {saida.push_back("if ");} VARIAVEL {saida.push_back($3);} Comparador VARIAVEL {saida.push_back($6);} ENTAO {saida.push_back(" then ");} Statement SENAO {saida.push_back(" else ");} Statement{printsaida(saida);}
+	;
+
 
 
 %%
@@ -113,4 +134,5 @@ Atribuicao:
 int main(void) {
 
   yyparse();
+	printsaida(saida);
 }

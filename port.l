@@ -26,6 +26,7 @@ VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 "ELEVADO" return(ELEVADO);
 "SE" return(SE);
 "SENAO" return(SENAO);
+"ENTAO" return (ENTAO);
 "MAIOR" return (MAIOR);
 "MENOR" return (MENOR);
 "IGUAL" return (IGUAL);
