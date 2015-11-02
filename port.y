@@ -43,7 +43,7 @@ void insertVariable(map<string, float> &mymap, string variable, float value){
 		mymap.insert(pair<string,float>(variable,value));			
 	}
 }
-void printsaida(vector<string> myvector){
+void printsaida(vector<string> &myvector){
   rubyfile.open("port.rb", fstream::out);
 	for(auto& iterator : myvector){
     rubyfile << iterator;
@@ -70,7 +70,6 @@ string convertNumber(float number){
 %token  RECEBE
 %token  PARENTESES_ESQ PARENTESES_DIR COLCHETE_ESQ COLCHETE_DIR CHAVES_ESQ CHAVES_DIR
 %type <real> Expressao
-%type <bool> Comparacao
 %token <strval> VARIAVEL
 %token FIM
 
@@ -96,28 +95,18 @@ Linha:
   ;
 
 Expressao:
-  NUMBER {$$ = $1;saida.push_back(convertNumber($1));saida.push_back("\n");}
-  | Expressao MAIS Expressao {$$ = $1 + $3; saida.push_back(convertNumber($1)); saida.push_back("+"); saida.push_back(convertNumber($3));saida.push_back("\n");}
-  | Expressao MENOS Expressao {$$ = $1 - $3;saida.push_back(convertNumber($1)); saida.push_back("-"); saida.push_back(convertNumber($3));saida.push_back("\n");}
-  | Expressao VEZES Expressao {$$ = $1 * $3;saida.push_back(convertNumber($1)); saida.push_back("*"); saida.push_back(convertNumber($3));saida.push_back("\n");}
-  | Expressao DIVIDA Expressao {$$ = $1 / $3;saida.push_back(convertNumber($1)); saida.push_back("/"); saida.push_back(convertNumber($3));saida.push_back("\n");}
-  | Expressao ELEVADO Expressao {$$ = pow($1,$3);saida.push_back(convertNumber($1)); saida.push_back("**"); saida.push_back(convertNumber($3));saida.push_back("\n");}
+  NUMBER {$$ = $1;saida.push_back(convertNumber($1));}
+  | Expressao MAIS   {saida.push_back("+");} Expressao {$$ = $1 + $4;}
+  | Expressao MENOS  {saida.push_back("-");} Expressao {$$ = $1 - $4;}
+  | Expressao VEZES  {saida.push_back("*");} Expressao {$$ = $1 * $4;}
+  | Expressao DIVIDA {saida.push_back("/");} Expressao {$$ = $1 / $4;}
+  | Expressao ELEVADO{saida.push_back("**");}Expressao {$$ = pow($1,$4);}
   ;
 
 Atribuicao:
-  VARIAVEL RECEBE Expressao {saida.insert(saida.begin(),"=");saida.insert(saida.begin(),$1);insertVariable(variablesMap,$1,$3);printmap(variablesMap); printsaida(saida);}
+  VARIAVEL {saida.push_back($1);} RECEBE {saida.push_back("=");} Expressao {saida.push_back("\n");insertVariable(variablesMap,$1,$5);printmap(variablesMap); printsaida(saida);}
     ;
 
-Comparacao:
-	Expressao MAIOR Expressao {$$ = $1 > $3;}
-  | Expressao IGUAL Expressao {$$ = $1 == $3;}
-	| Expressao MENOR Expressao {$$ = $1 < $3;}
-	| Expressao DIFERENTE Expressao	{$$ = $1 != $3;}
-	; 
-
-Condicional:
-	SE Comparacao	Expressao
-	;
 
 %%
 
