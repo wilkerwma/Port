@@ -12,7 +12,6 @@ exponencial [eE][+-]?{numero}
 real {numero}("."{numero})?{exponencial}?
 string "\w*"
 
-/*Variáveis*/
 
 VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 
@@ -24,13 +23,22 @@ VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 "VEZES" return(VEZES);
 "DIVIDA" return(DIVIDA);
 "ELEVADO" return(ELEVADO);
+
 "SE" return(SE);
 "SENAO" return(SENAO);
 "ENTAO" return (ENTAO);
+
 "MAIOR" return (MAIOR);
 "MENOR" return (MENOR);
 "IGUAL" return (IGUAL);
 "DIFERENTE" return (DIFERENTE);
+
+"PARA" return (PARA);
+"ENQUANTO" return(ENQUANTO);
+"FACA" return (FACA);
+
+"FIM" return (FIM);
+
 
 "(" return(PARENTESES_ESQ);
 ")" return(PARENTESES_DIR);
