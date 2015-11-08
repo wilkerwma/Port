@@ -36,8 +36,9 @@ VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 "PARA" return (PARA);
 "ENQUANTO" return(ENQUANTO);
 "FACA" return (FACA);
-
+"ATE" return (ATE);
 "FIM" return (FIM);
+"EM" return (EM);
 
 
 "(" return(PARENTESES_ESQ);

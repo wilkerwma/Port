@@ -63,7 +63,7 @@ string convertNumber(float number){
 %token MAIORIGUAL MENORIGUAL MAIOR MENOR IGUAL DIFERENTE /*Comparadores*/
 %token RECEBE
 %token PARENTESES_ESQ PARENTESES_DIR COLCHETE_ESQ COLCHETE_DIR CHAVES_ESQ CHAVES_DIR
-%token ENQUANTO FACA PARA
+%token ENQUANTO FACA PARA ATE EM
 
 %type <real> Expressao
 %token <strval> VARIAVEL
@@ -113,8 +113,8 @@ Comparador:
 	;
 
 Loop:
-	ENQUANTO {saida.push_back("while (");} PARENTESES_ESQ  VARIAVEL{saida.push_back($4);} Comparador VARIAVEL{saida.push_back($7);} PARENTESES_DIR{saida.push_back(")\n");} Statement FIM {saida.push_back("end");printsaida(saida);} 
-
+	ENQUANTO {saida.push_back("while(");} PARENTESES_ESQ  VARIAVEL{saida.push_back($4);} Comparador VARIAVEL{saida.push_back($7);} PARENTESES_DIR{saida.push_back(")");} FACA {saida.push_back(" do\n");} Statement FIM {saida.push_back("end");printsaida(saida);} 
+	| PARA {saida.push_back("for ");} VARIAVEL{saida.push_back($3);} EM {saida.push_back(" in");} PARENTESES_ESQ{saida.push_back(" (");}  NUMBER {saida.push_back(convertNumber($9));} ATE {saida.push_back("..");} NUMBER{saida.push_back(convertNumber($13));} PARENTESES_DIR{saida.push_back(")\n");} Statement FIM{saida.push_back("end");printsaida(saida);}  
 ;
 Condicao:
 	SE {saida.push_back("if ");} VARIAVEL {saida.push_back($3);} Comparador VARIAVEL {saida.push_back($6);} ENTAO {saida.push_back(" then ");} Statement SENAO {saida.push_back(" else ");} Statement FIM{printsaida(saida);}
