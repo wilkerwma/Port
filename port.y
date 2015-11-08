@@ -114,7 +114,9 @@ Comparador:
 
 Loop:
 	ENQUANTO {saida.push_back("while(");} PARENTESES_ESQ  VARIAVEL{saida.push_back($4);} Comparador VARIAVEL{saida.push_back($7);} PARENTESES_DIR{saida.push_back(")");} FACA {saida.push_back(" do\n");} Statement FIM {saida.push_back("end");printsaida(saida);} 
+	| FACA {saida.push_back("begin \n");} Statement ENQUANTO{saida.push_back("end while");} PARENTESES_ESQ{saida.push_back(")");} VARIAVEL{saida.push_back($8);} Comparador VARIAVEL{saida.push_back($11);} PARENTESES_DIR{saida.push_back(") \n");} FIM	{printsaida(saida);}
 	| PARA {saida.push_back("for ");} VARIAVEL{saida.push_back($3);} EM {saida.push_back(" in");} PARENTESES_ESQ{saida.push_back(" (");}  NUMBER {saida.push_back(convertNumber($9));} ATE {saida.push_back("..");} NUMBER{saida.push_back(convertNumber($13));} PARENTESES_DIR{saida.push_back(")\n");} Statement FIM{saida.push_back("end");printsaida(saida);}  
+
 ;
 Condicao:
 	SE {saida.push_back("if ");} VARIAVEL {saida.push_back($3);} Comparador VARIAVEL {saida.push_back($6);} ENTAO {saida.push_back(" then ");} Statement SENAO {saida.push_back(" else ");} Statement FIM{printsaida(saida);}
