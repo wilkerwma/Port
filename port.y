@@ -56,6 +56,7 @@ string convertNumber(float number){
 %union {
 	float real;
 	char *strval;
+	char *strfunc;
 }
 %token <real> NUMBER
 %token MAIS MENOS VEZES DIVIDA ELEVADO RAIZ
@@ -65,9 +66,12 @@ string convertNumber(float number){
 %token PARENTESES_ESQ PARENTESES_DIR COLCHETE_ESQ COLCHETE_DIR CHAVES_ESQ CHAVES_DIR
 %token ENQUANTO FACA PARA ATE EM
 
+%token DEFINA
+%token <strfunc> FUNCAO
+
 %type <real> Expressao
 %token <strval> VARIAVEL
-%token FIM
+%token FIM VIRGULA
 %left VEZES DIVIDA
 %left MAIS MENOS
 %left NEG
@@ -83,7 +87,8 @@ Linha:
   | Expressao FIM
   | Atribuicao FIM
   | Condicao FIM
-  | Loop FIM 	
+  | Loop FIM
+  | Funcao FIM 	
   | error FIM {yyerrok;}
   ;
 Expressao:
@@ -94,14 +99,24 @@ Expressao:
   | Expressao DIVIDA {saida.push_back("/");} Expressao {$$ = $1 / $4;}
   | Expressao ELEVADO{saida.push_back("**");}Expressao {$$ = pow($1,$4);}
   ;
+Funcao:
+	DEFINA{saida.push_back("def ");} FUNCAO  {saida.push_back($3);} PARENTESES_ESQ{saida.push_back(" (");}  Parametro PARENTESES_DIR{saida.push_back(")\n");} Statement FIM{saida.push_back("end");} {printsaida(saida);}
+	;
+
 Atribuicao:
   VARIAVEL {saida.push_back($1);} RECEBE {saida.push_back("=");} Expressao {saida.push_back("\n");insertVariable(variablesMap,$1,$5);printmap(variablesMap);}
     ;
+Parametro:
+	VARIAVEL  {saida.push_back($1);}
+	| VARIAVEL  {saida.push_back($1);} VIRGULA {saida.push_back(",");} Parametro
+	;
+
 Statement:
-	Expressao
-	| Atribuicao
-	| Loop
-	| Condicao
+	{saida.push_back("\t");}Expressao
+	| {saida.push_back("\t");}Atribuicao
+	| {saida.push_back("\t");}Loop
+	| {saida.push_back("\t");}Condicao
+	|	
 	;
 Comparador:
 	IGUAL {saida.push_back("==");}
@@ -113,8 +128,8 @@ Comparador:
 	;
 
 Loop:
-	ENQUANTO {saida.push_back("while(");} PARENTESES_ESQ  VARIAVEL{saida.push_back($4);} Comparador VARIAVEL{saida.push_back($7);} PARENTESES_DIR{saida.push_back(")");} FACA {saida.push_back(" do\n");} Statement FIM {saida.push_back("end\n");printsaida(saida);} 
-	| FACA {saida.push_back("begin \n");} Statement ENQUANTO{saida.push_back("end while");} PARENTESES_ESQ{saida.push_back("(");} VARIAVEL{saida.push_back($8);} Comparador VARIAVEL{saida.push_back($11);} PARENTESES_DIR{saida.push_back(") \n");} FIM	{printsaida(saida);}
+	ENQUANTO {saida.push_back("while(");} PARENTESES_ESQ  VARIAVEL{saida.push_back($4);} Comparador VARIAVEL{saida.push_back($7);} PARENTESES_DIR{saida.push_back(")");} FACA {saida.push_back(" do\n");} {saida.push_back("\t");} Statement FIM {saida.push_back("end\n");printsaida(saida);} 
+	| FACA {saida.push_back("begin \n");} Statement ENQUANTO{saida.push_back("end while");} PARENTESES_ESQ{saida.push_back("(");} VARIAVEL{saida.push_back($8);} Comparador VARIAVEL{saida.push_back($11);} PARENTESES_DIR{saida.push_back(") \n");} FIM{printsaida(saida);}
 	| PARA {saida.push_back("for ");} VARIAVEL{saida.push_back($3);} EM {saida.push_back(" in");} PARENTESES_ESQ{saida.push_back(" (");}  NUMBER {saida.push_back(convertNumber($9));} ATE {saida.push_back("..");} NUMBER{saida.push_back(convertNumber($13));} PARENTESES_DIR{saida.push_back(")\n");} Statement FIM{saida.push_back("end\n");printsaida(saida);}  
 
 ;
