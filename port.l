@@ -5,6 +5,7 @@
 
 /* Números*/
 
+
 branco [ \t]+
 digito [0-9]
 numero -?{digito}+
