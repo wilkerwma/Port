@@ -49,6 +49,7 @@ void insertVariable(map<string, float> &mymap, string variable, float value){
 	}
 }
 
+// Geração de código no arquivo .rb 
 void printsaida(vector<string> &myvector){
   rubyfile.open("port.rb", fstream::out);
 	for(auto& iterator : myvector){
@@ -57,6 +58,7 @@ void printsaida(vector<string> &myvector){
 	rubyfile.close();
 }
 
+//Conversor de strings em números
 string convertNumber(float number){
 	ss.str("");
 	ss << number;
@@ -65,18 +67,20 @@ string convertNumber(float number){
 }
 %}
 
+/* Tipos de dados dos itens léxicos */
 %union {
 	float real;
 	char *strval;
 	char *strfunc;
 }
+
 %token <real> NUMBER
 %token MAIS MENOS VEZES DIVIDA ELEVADO RAIZ
 %token SE SENAO ENTAO /*Condicionais*/
 %token MAIORIGUAL MENORIGUAL MAIOR MENOR IGUAL DIFERENTE /*Comparadores*/
 %token RECEBE
 %token PARENTESES_ESQ PARENTESES_DIR COLCHETE_ESQ COLCHETE_DIR CHAVES_ESQ CHAVES_DIR
-%token ENQUANTO FACA PARA ATE EM
+%token ENQUANTO FACA PARA ATE EM /* Repetição */
 
 %token DEFINA
 %token <strfunc> FUNCAO
