@@ -1,11 +1,16 @@
+/*
+* Lexical Analyser
+* Identifies the words of language.
+* Input: character sequence.
+* Output: tokens sequence.
+*/
+
 %{
 #include "port.h"
 #include <cstdlib>
 %}
 
-/* Números*/
-
-
+/* Definição de macros */
 branco [ \t]+
 digito [0-9]
 numero -?{digito}+
@@ -16,7 +21,7 @@ FUNCAO [a-z]+[a-zA-Z0-9]*
 VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 
 %%
-
+/* Regras */
 "RECEBE" return(RECEBE);
 "MAIS" return(MAIS);
 "MENOS" return(MENOS);
@@ -55,8 +60,6 @@ VARIAVEL [a-z|A-Z]+[a-zA-Z0-9]*
 {real} {yylval.real = atof(yytext);return NUMBER;}
 {FUNCAO} {yylval.strfunc = strdup(yytext); return FUNCAO;}
 {VARIAVEL} {yylval.strval = strdup(yytext);return VARIAVEL;}
-
-
 
 %%
 

@@ -1,3 +1,8 @@
+/*
+* Syntactic Analyser
+* Objective: group the lexical items on valid command blocks.
+*/
+
 %{
 #include <iostream>
 #include <cstdio>
@@ -8,6 +13,7 @@
 #include <sstream>
 #include <fstream>
 #include "port.h"
+
 using namespace std;
 ofstream rubyfile;
 map<string,float> variablesMap;
@@ -15,14 +21,17 @@ vector<string> saida;
 extern char* yytext;
 ostringstream ss;
 int yylex(void);
+
 void yyerror (char const *s) {
    fprintf (stderr, "%s\n", s);
  }
+
 void printmap(map<string,float> mymap){
   for(auto& iterator : mymap){
     cout << iterator.first << " " << iterator.second << endl;
   }
 }
+
 bool checkmap(map<string,float> &mymap, string variable){
 	bool checker = NULL;
 	for(auto& iterator : mymap)
@@ -39,6 +48,7 @@ void insertVariable(map<string, float> &mymap, string variable, float value){
 		mymap.insert(pair<string,float>(variable,value));			
 	}
 }
+
 void printsaida(vector<string> &myvector){
   rubyfile.open("port.rb", fstream::out);
 	for(auto& iterator : myvector){
@@ -46,6 +56,7 @@ void printsaida(vector<string> &myvector){
   }
 	rubyfile.close();
 }
+
 string convertNumber(float number){
 	ss.str("");
 	ss << number;
@@ -53,6 +64,7 @@ string convertNumber(float number){
 	return s;
 }
 %}
+
 %union {
 	float real;
 	char *strval;
